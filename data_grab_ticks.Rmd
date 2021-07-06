@@ -59,9 +59,9 @@ rm(list = ls())
 Update the chunk below for the next data product you would like to download:
 ```{r, eval = FALSE}
 list2env((loadByProduct(dpID = 'DP1.10072.001',
-                           site = c('SCBI'),
-                           startdate = '2018-01',  # YYYY-MM
-                           enddate = '2019-12')),  # YYYY-MM
+                           site = c('DELA','SCBI','JERC'),
+                           startdate = '2017-03',  # YYYY-MM
+                           enddate = '2021-07')),  # YYYY-MM
          .GlobalEnv)
 ```
 
@@ -71,6 +71,6 @@ files <- mget(ls())
 
 for (i in 1:length(files)){
   # Change the SCBI_mammals text below to indicate the name of the folder where you want to store your data
-  write_csv(files[[i]], file = paste0("./data/SCBI_mammals_raw/", names(files[i]), ".csv", sep=""))
+  write_csv(files[[i]], file = paste0("./mammals_raw/", names(files[i]), ".csv", sep=""))
 }
 ```
