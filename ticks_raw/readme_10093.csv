@@ -1,0 +1,163 @@
+X1
+###################################
+########### Disclaimer ############
+This is the most recent readme publication based on all site-date combinations used during stackByTable.
+"Information specific to the query, including sites and dates, has been removed. The remaining content reflects general metadata for the data product."
+"All files used during stacking are listed at the bottom of this document, which includes the data publication dates."
+##################################
+"This data package been produced by and downloaded from the National Ecological Observatory Network, managed cooperatively by Battelle. These data are provided under the terms of the NEON data policy at http://data.neonscience.org/data-policy."
+DATA PRODUCT INFORMATION
+------------------------
+ID: NEON.DOM.SITE.DP1.10093.001
+Name: Ticks sampled using drag cloths
+Description: Abundance and density of ticks collected by drag and/or flag sampling (by species and/or lifestage)
+NEON Science Team Supplier: TOS
+"Abstract: This data product contains the quality-controlled, native sampling resolution data from the Tick and Tick-Borne Pathogen Sampling protocol. Tick abundance and diversity are sampled at regular intervals by NEON field technicians at core and relocatable sites using drag or flag sampling techniques. For additional details on protocol, see the TOS Protocol and Procedure: Tick and Tick-Borne Pathogen Sampling. Following collection, samples are sent to a professional taxonomist where ticks are identified to species and lifestage and/or sex. Identified ticks are then processed for pathogen analysis or preserved for final archiving. Products resulting from this sampling and processing include records of when ticks were sampled and the taxonomic and abundance data of ticks captured. For additional details, see the user guide, protocols, and science design"
+Latency:
+"The expected time from data and/or sample collection in the field to data publication is as follows, for each of the data tables (in days) in the downloaded data package. See the Data Product User Guide for more information."
+tck_fielddata:  30
+tck_taxonomyProcessed:  300
+tck_taxonomyRaw:  300
+"Brief Design Description: During the growing season, sampling is conducted every three weeks at sites where more than five ticks have been detected in the last year and every six weeks elsewhere. Sampling also occurs only if the high temperature on two consecutive days prior to planned sampling exceeds 0 °C, and the ground is dry."
+Brief Study Area Description: These data are collected at NEON terrestrial sites.
+"Keywords: species composition, population, Arachnida, community composition, flagging, vector-borne, questing, density, archived samples, Animalia, ectoparasites, parasites, disease, Arthropoda, Acari, animals, ticks, drag cloths, taxonomy, arthropods, material samples, dragging, specimens, arachnids, Ixodida"
+DATA PACKAGE CONTENTS
+---------------------
+This data product contains up to 3 data tables:
+tck_taxonomyRaw - Tick identifications by expert taxonomists - raw
+tck_fielddata - Tick field collection data
+tck_taxonomyProcessed - Tick identifications by expert taxonomists - desynonimized
+"If data are unavailable for the particular sites and dates queried, some tables may be absent."
+Basic download package definition: The basic download presents higher taxonomy information according to NEON and reassigns synonymies with the current valid name.
+Expanded download package definition: The expanded data package includes an additional file that includes the taxonomic nomenclature as received from the external taxonomist.
+FILE NAMING CONVENTIONS
+-----------------------
+NEON data files are named using a series of component abbreviations separated by periods. File naming conventions for NEON data files differ between NEON science teams. A file will have the same name whether it is accessed via the data portal or the API.
+NEON observational systems (OS) data files: NEON.DOM.SITE.DPL.PRNUM.REV.DESC.YYYY-MM.PKGTYPE.GENTIME.csv
+"The definitions of component abbreviations are below. See NEON.DOC.002651: NEON Data Product Numbering Convention, located at http://data.neonscience.org/documents for more information."
+"General conventions, used for all data products:"
+"NEON: denotes the organizational origin of the data product and identifies the product as operational; data collected as part of a special data collection exercise are designated by a separate, unique alphanumeric code created by the PI."
+"DOM: a three-character alphanumeric code, referring to the domain of data acquisition (D01 - D20)."
+"SITE: a four-character alphanumeric code, referring to the site of data acquisition; all sites are designated by a standardized four-character alphabetic code."
+"DPL: a three-character alphanumeric code, referring to data product processing level;"
+"PRNUM: a five-character numeric code, referring to the data product number (see the Data Product Catalog at http://data.neonscience.org/data-product-catalog)."
+"REV: a three-digit designation, referring to the revision number of the data product. The REV value is incremented by 1 each time a major change is made in instrumentation, data collection protocol, or data processing such that data from the preceding revision is not directly comparable to the new."
+"HOR: a three-character designation, referring to measurement locations within one horizontal plane. For example, if five surface measurements were taken, one at each of the five soil array plots, the number in the HOR field would range from 001-005."
+"VER: a three-character designation, referring to measurement locations within one vertical plane. For example, if eight air temperature measurements are collected, one at each tower vertical level, the number in the VER field would range from 010-080. If five soil temperature measurements are collected below the soil surface, the number in the VER field would range from 501-505."
+"TMI: a three-character designation, referring to the temporal representation, averaging period, or coverage of the data product (e.g., minute, hour, month, year, sub-hourly, day, lunar month, single instance, seasonal, annual, multi-annual). 000 = native resolution, 001 = native resolution (variable or regular) or 1 minute, 002 = 2 minute, 005 = 5 minute, 015 = 15 minute, 030 = 30 minute, 060 = 60 minutes or 1 hour, 100 = approximately once per minute at stream sites and once every 5-10 minutes at buoy sites (lakes/rivers), 101-103 = native resolution of replicate sensor 1, 2, and 3 respectively, 999 = Sensor conducts measurements at varied interval depending on air mass, 01D = 1 day, 01M = 1 month, 01Y = 1 year."
+DESC: an abbreviated description of the data file or table.
+YYYY-MM: the year and month of the data in the file.
+"PKGTYPE: the type of data package downloaded. Options are 'basic', representing the basic download package, or 'expanded',representing the expanded download package (see more information below)."
+"GENTIME: the date-time stamp when the file was generated, in UTC. The format of the date-time stamp is YYYYMMDDTHHmmSSZ."
+Time stamp conventions:
+YYYY: Year
+"YY: Year, last two digits only"
+MM: Month: 01-12
+DD: Day: 01-31
+T: Indicator that the time stamp is beginning
+HH: Hours: 00-23
+mm: Minutes: 00-59
+SS: Seconds: 00-59
+"Z: Universal Time Coordinated (Universal Coordinated Time), or UTC"
+ADDITIONAL INFORMATION
+----------------------
+Data products that are a source of this data product:
+Data products that are derived from this data product:
+"Other related data products (by sensor, protocol, or variable measured):"
+"NEON.DOM.SITE.DP1.10092.001, Tick-borne pathogen status"
+"Obfuscation of Personnel Information: At times it is important to know which data were collected by particular observers. In order to protect privacy of NEON technicians while also providing a way to consistently identify different observers, we obfuscate each NEON personnel name by internally linking it to a unique string identifier (e.g., Jane Doe=ByrziN0LguMJHnInl2NM/trZeA5h+c0) and publishing only the identifier."
+CHANGE LOG
+----------
+Issue Date: 2021-01-06
+Issue: Safety measures to protect personnel during the COVID-19 pandemic resulted in reduced or eliminated sampling activities for extended periods at NEON sites. Data availability may be reduced during this time.
+Date Range: 2020-03-23 to 2021-06-01
+Location(s) Affected: All
+Resolution Date:
+Resolution:
+Issue Date: 2020-10-27
+"Issue: Several tick counts reported for field data do not match those returned by the taxonomy laboratory for different life stages. This could be due to (i) mis-identification of life stages by the field team, (ii) incomplete enumeration by the taxonomy laboratory due to unreported subsampling to meet invoice limits between 2013-2019, (iii) subsampling such that when > 500 larvae were collected, only 500 were shipped to the taxonomy laboratory between 2016-2018, or (iv) occasional entry of an incorrect number at either the field or laboratory stage or loss of tick(s) during the collection procedure."
+Date Range: 2013-01-01 to 2019-03-18
+Location(s) Affected: All terrestrial sites
+Resolution Date: 2020-10-27
+"Resolution: To assist with determining the reliability of the different counts in the collection and identification tables, several quality flags have been added to the dataQF field along with comments in the remarks field. In all cases where >500 larvae were collected in the field between 2016-2018, the associated identification record has 'ID lab count subsample of total field larvae' in the dataQF field. The dataQF field in both the collection and identification tables also indicates the life stage(s) where the percent difference in enumeration (PDE) is >25%, and whether the field or taxonomy lab was higher (e.g., field nymph count higher than ID lab (PDE >25%)). PDE is calculated as:  |(field count – lab count)| / (field count + lab count) * 100. Finally, for all site-years where invoice limits may have been reached and the PDE is > 25%, a remark has"
+Issue Date: 2020-10-27
+Issue: Counts of larvae from 2016-2017 were temporarily reported as a count of 1 in the taxonomy laboratory data no matter what the true counts were.
+Date Range: 2016-01-01 to 2017-12-31
+Location(s) Affected: All terrestrial sites
+Resolution Date: 2020-10-27
+Resolution: The corrected counts from the taxonomy laboratory for these legacy larvae samples were located and uploaded.
+Issue Date: 2020-10-27
+Issue: There are sometimes fewer than the expected number of records for a given bout of sampling without a clear reason for the missing records.
+Date Range: 2013-01-01 to 2020-04-01
+Location(s) Affected: All terrestrial sites
+Resolution Date: 2020-04-01
+"Resolution: The field samplingImpractical was added to the data to allow for the generation of a record when a plot or site could not be sampled. If sampling could not be conducted for all or part of a bout, the samplingImpractical field will communicate the reason for the missing records."
+Issue Date: 2020-10-27
+Issue: Enumerating ticks in both the field and taxonomy laboratory is a duplication of effort that leads to confusion when field teams occasionally experience challenges correctly identifying tick life stages.
+Date Range: 2013-01-01 to 2019-01-01
+Location(s) Affected: All terrestrial sites
+Resolution Date: 2019-01-01
+Resolution: Field teams no longer enumerate ticks by life stage. All ticks are shipped to the taxonomy laboratory for processing.
+Issue Date: 2020-10-27
+Issue: High intensity (every 3 weeks) tick sampling occurs at sites where very few ticks are collected
+Date Range: 2013-01-01 to 2018-02-20
+Location(s) Affected: All terrestrial sites
+Resolution Date: 2018-02-20
+Resolution: The threshold for transitioning between high (every 3 weeks) and low (every 6 weeks) intensity sampling was changed from 1 to 5 ticks collected in the previous year.
+Issue Date: 2020-10-27
+Issue: Ticks stored in RNA buffer solution
+Date Range: 2016-01-29 to 2017-04-05
+Location(s) Affected: All terrestrial sites
+Resolution Date: 2017-04-05
+"Resolution: Archive medium is recorded in the data. Ticks are stored in 90 or 95% ethanol except for those collected during the 2016 field season, which are stored in an RNA buffer solution. Storage reverted to ethanol after 2016 to prevent the formation of precipitates that made identification more challenging."
+Issue Date: 2020-10-27
+Issue: The density of vegetation in the randomly selected tick plots at GUAN precludes sampling of ticks according to the design in the protocol.
+Date Range: 2016-01-01 to 2016-01-01
+Location(s) Affected: GUAN
+Resolution Date: 2016-01-01
+Resolution: Six transect paths where sampling is feasible were located by field staff.  Each path contains between 80-160 m2 of sampled area where dragging and/or flagging occurs over one or more segments 10 or more meters long and within 10 m of another segment.
+ADDITIONAL REMARKS
+------------------
+"Queries for this data product will return data from `tck_fielddata` and tckTaxonomy subset to data collected during the date range specified. The protocol dictates that each of 6 plotIDs per site is sampled during each eventID (six expected record per eventID). An record from `tck_fielddata` may have zero or more related records in `tck_taxonomy`, depending on whether ticks were present in the sample. Duplicates may exist where protocol and/or data entry aberrations have occurred; users should check data carefully for anomalies before joining tables."
+NEON DATA POLICY AND CITATION GUIDELINES
+----------------------------------------
+Please visit http://data.neonscience.org/data-policy for more information about NEON's data policy and citation guidelines.
+DATA QUALITY AND VERSIONING
+---------------------------
+"The data contained in this file are considered provisional. Updates to the data, QA/QC and/or processing algorithms over time will occur on an as-needed basis.  Please check back to this site for updates tracked in change logs.  Query reproducibility on provisional data cannot be guaranteed."
+
+"Starting in 2020 or earlier, NEON will begin to offer static versions of each data product, annotated with a globally unique identifier. Versioned IS and OS data will be produced by reprocessing each IS and OS data product from the beginning of the data collection period to approximately 12-18 months prior to the reprocessing date (to allow for calibration checks, return of external lab data, etc.). The reprocessing step will use the most recent QA/QC methods and processing algorithms. Versioned AOP data will be produced by reprocessing the entire AOP archive as advances in algorithms and processing technology are incorporated. This will typically occur in the northern winter months, between flight season peaks, and will be on the order of every 3 to 5 years in frequency."
+POST STACKING README DOCUMENTATION
+----------------------------------
+Each row contains the readme filename used during stackByTable
+NEON.D02.SCBI.DP1.10093.001.readme.20210123T023002Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T170619Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T175839Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T171943Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T185029Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T155916Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T162934Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T185032Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210504T170817Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210510T144143Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210607T151452Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210628T192213Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210123T023002Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210504T180437Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210504T165829Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210504T171402Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210504T155823Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210504T180114Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210510T143525Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210628T185713Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210123T023002Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T163340Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T155207Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T155226Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T172307Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T164014Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T171630Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210504T180634Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210510T144404Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210607T153628Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210628T185931Z.txt
