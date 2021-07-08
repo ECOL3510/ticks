@@ -33,7 +33,7 @@ We use the code chunk below to specify the NEON data package we want to download
 By default, NEON data is saved to R as a *list* of data files. However, we have included the `list2env` command as a wrapper below so that the data are saved as separate objects in our RStudio environment pane.
 ```{r, eval = FALSE}
 list2env((loadByProduct(dpID = 'DP1.10093.001',
-                           site = c('DELA','JERC','SCBI'),
+                           site = c('DELA','JERC','SCBI','OSBS', 'HARV'),
                            startdate = '2017-03',  # YYYY-MM
                            enddate = '2021-07')),  # YYYY-MM
          .GlobalEnv)
@@ -59,7 +59,7 @@ rm(list = ls())
 Update the chunk below for the next data product you would like to download:
 ```{r, eval = FALSE}
 list2env((loadByProduct(dpID = 'DP1.10072.001',
-                           site = c('DELA','SCBI','JERC'),
+                           site = c('DELA','SCBI','JERC', 'OSBS', 'HARV'),
                            startdate = '2017-03',  # YYYY-MM
                            enddate = '2021-07')),  # YYYY-MM
          .GlobalEnv)

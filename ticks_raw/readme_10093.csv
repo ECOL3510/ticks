@@ -20,7 +20,7 @@ tck_taxonomyProcessed:  300
 tck_taxonomyRaw:  300
 "Brief Design Description: During the growing season, sampling is conducted every three weeks at sites where more than five ticks have been detected in the last year and every six weeks elsewhere. Sampling also occurs only if the high temperature on two consecutive days prior to planned sampling exceeds 0 °C, and the ground is dry."
 Brief Study Area Description: These data are collected at NEON terrestrial sites.
-"Keywords: species composition, population, Arachnida, community composition, flagging, vector-borne, questing, density, archived samples, Animalia, ectoparasites, parasites, disease, Arthropoda, Acari, animals, ticks, drag cloths, taxonomy, arthropods, material samples, dragging, specimens, arachnids, Ixodida"
+"Keywords: parasites, ectoparasites, drag cloths, taxonomy, vector-borne, Acari, Arthropoda, community composition, density, archived samples, disease, Ixodida, animals, material samples, species composition, Arachnida, Animalia, specimens, questing, flagging, dragging, arachnids, ticks, arthropods, population"
 DATA PACKAGE CONTENTS
 ---------------------
 This data product contains up to 3 data tables:
@@ -130,6 +130,15 @@ DATA QUALITY AND VERSIONING
 POST STACKING README DOCUMENTATION
 ----------------------------------
 Each row contains the readme filename used during stackByTable
+NEON.D01.HARV.DP1.10093.001.readme.20210123T023002Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210504T170322Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210504T180303Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210504T180345Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210504T170552Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210504T172134Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210504T155028Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210607T152139Z.txt
+NEON.D01.HARV.DP1.10093.001.readme.20210706T212520Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210123T023002Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210504T170619Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210504T175839Z.txt
@@ -139,17 +148,28 @@ NEON.D02.SCBI.DP1.10093.001.readme.20210504T155916Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210504T162934Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210504T185032Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210504T170817Z.txt
-NEON.D02.SCBI.DP1.10093.001.readme.20210510T144143Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210706T212844Z.txt
 NEON.D02.SCBI.DP1.10093.001.readme.20210607T151452Z.txt
-NEON.D02.SCBI.DP1.10093.001.readme.20210628T192213Z.txt
+NEON.D02.SCBI.DP1.10093.001.readme.20210706T214029Z.txt
 NEON.D03.JERC.DP1.10093.001.readme.20210123T023002Z.txt
 NEON.D03.JERC.DP1.10093.001.readme.20210504T180437Z.txt
 NEON.D03.JERC.DP1.10093.001.readme.20210504T165829Z.txt
 NEON.D03.JERC.DP1.10093.001.readme.20210504T171402Z.txt
 NEON.D03.JERC.DP1.10093.001.readme.20210504T155823Z.txt
 NEON.D03.JERC.DP1.10093.001.readme.20210504T180114Z.txt
-NEON.D03.JERC.DP1.10093.001.readme.20210510T143525Z.txt
-NEON.D03.JERC.DP1.10093.001.readme.20210628T185713Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210706T214334Z.txt
+NEON.D03.JERC.DP1.10093.001.readme.20210706T214932Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210123T023002Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T175840Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T165600Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T160240Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T184753Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T164637Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T180737Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210504T171411Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210706T212043Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210607T153509Z.txt
+NEON.D03.OSBS.DP1.10093.001.readme.20210706T220513Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210123T023002Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210504T163340Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210504T155207Z.txt
@@ -158,6 +178,6 @@ NEON.D08.DELA.DP1.10093.001.readme.20210504T172307Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210504T164014Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210504T171630Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210504T180634Z.txt
-NEON.D08.DELA.DP1.10093.001.readme.20210510T144404Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210706T213720Z.txt
 NEON.D08.DELA.DP1.10093.001.readme.20210607T153628Z.txt
-NEON.D08.DELA.DP1.10093.001.readme.20210628T185931Z.txt
+NEON.D08.DELA.DP1.10093.001.readme.20210706T214124Z.txt
