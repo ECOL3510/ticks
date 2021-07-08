@@ -1,0 +1,15 @@
+```{r}
+#install.packages('tidyverse', repos = "http://cran.us.r-project.org")
+#install.packages('neonUtilities', repos = "http://cran.us.r-project.org")
+
+library(tidyverse)
+library(neonUtilities)
+```
+```{r, eval = FALSE}
+list2env((loadByProduct(dpID = 'DP1.00002.001',
+                           site = c('DELA', 'JERC', 'SCBI', 'OSBS', 'HARV'),
+                        startdate = '2017-03',
+                        enddate = '2021-07',
+                        timeIndex = '30')),
+         .GlobalEnv)
+```
