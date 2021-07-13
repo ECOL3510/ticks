@@ -1,0 +1,57 @@
+---
+title: "small mams data wrangling"
+output: html_document
+---
+```{r}
+path <- "./mammals_raw/"
+
+files <- list.files(path=path, pattern="*.csv")
+```
+```{r, warning = FALSE}
+for(file in files){
+  perpos <- which(strsplit(file, "")[[1]]==".")
+  assign(
+    gsub(" ","",substr(file, 1, perpos-1)),
+    read_csv(paste(path,file,sep="")))
+}
+```
+```{r}
+smamdata <- mam_pertrapnight
+View(smamdata)
+```
+```{r}
+names(smamdata)
+```
+```{r}
+captures <- smamdata %>% 
+  mutate(collectDate = as.Date(collectDate)) %>% 
+  select(siteID, plotID, collectDate, taxonID, tagID, sex, lifeStage) # Select certain columns
+
+glimpse(captures)
+```
+```{r}
+captures <- captures %>% 
+  filter(!is.na(tagID)) # Only keep rows where "tagID" has data
+
+View(captures)
+```
+```{r}
+captures <- smamdata %>% 
+  mutate(collectDate = as.Date(collectDate)) %>% 
+  select(siteID, plotID, collectDate, taxonID, tagID, sex, lifeStage, larvalTicksAttached, adultTicksAttached) # Select certain columns
+
+glimpse(captures)
+```
+```{r}
+captures <- captures %>% 
+  filter(!is.na(tagID)) # Only keep rows where "tagID" has data
+
+View(captures)
+```
+
+Save cleaned data to csv
+```{r}
+captures %>% 
+  write_csv('./clean_data/mammals_clean.csv')
+```
+

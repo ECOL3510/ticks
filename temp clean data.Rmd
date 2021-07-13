@@ -9,18 +9,6 @@ output: html_document
 #library(hms)
 ```
 ```{r}
-path <- "./ticks_raw/"
-
-files <- list.files(path=path, pattern="*.csv")
-
-for(file in files){
-  perpos <- which(strsplit(file, "")[[1]]==".")
-  assign(
-    gsub(" ","",substr(file, 1, perpos-1)),
-    read_csv(paste(path,file,sep=""), guess_max = 10000))
-}
-```
-```{r}
 path <- "./temperature_raw/"
 
 files <- list.files(path=path, pattern="*.csv")
@@ -46,3 +34,9 @@ temperature_sub <- temperature_sub %>%
 
 View(temperature_sub)
 ```
+
+```{r}
+temperature_sub %>% 
+  write_csv('./clean_data/temp_clean.csv')
+```
+
