@@ -13,3 +13,15 @@ list2env((loadByProduct(dpID = 'DP1.00002.001',
                         timeIndex = '30')),
          .GlobalEnv)
 ```
+```{r}
+path <- "./raw_temp/"
+
+files <- list.files(path=path, pattern="*.csv")
+
+for(file in files){
+  perpos <- which(strsplit(file, "")[[1]]==".")
+  assign(
+    gsub(" ","",substr(file, 1, perpos-1)),
+    read_csv(paste(path,file,sep=""), guess_max = 500000))
+}
+```

@@ -1,0 +1,48 @@
+---
+title: "data cleaning adventure"
+output: html_document
+---
+
+```{r, message = FALSE}
+#library(tidyverse)
+#library(lubridate)
+#library(hms)
+```
+```{r}
+path <- "./ticks_raw/"
+
+files <- list.files(path=path, pattern="*.csv")
+
+for(file in files){
+  perpos <- which(strsplit(file, "")[[1]]==".")
+  assign(
+    gsub(" ","",substr(file, 1, perpos-1)),
+    read_csv(paste(path,file,sep=""), guess_max = 10000))
+}
+```
+```{r}
+path <- "./temperature_raw/"
+
+files <- list.files(path=path, pattern="*.csv")
+
+for(file in files){
+  perpos <- which(strsplit(file, "")[[1]]==".")
+  assign(
+    gsub(" ","",substr(file, 1, perpos-1)),
+    read_csv(paste(path,file,sep=""), guess_max = 500000))
+}
+```
+```{r}
+temperature_sub <- SAAT_30min %>% 
+  filter(!is.na(tempSingleMean))
+```
+```{r}
+temperature_sub <- temperature_sub %>% 
+  mutate(date = as.Date(startDateTime),
+         month = month(date),
+         year = year(date),
+         time = as_hms(startDateTime)) %>% 
+  select(siteID, year, month, date, time, tempSingleMean:tempSingleMaximum, finalQF)
+
+View(temperature_sub)
+```
