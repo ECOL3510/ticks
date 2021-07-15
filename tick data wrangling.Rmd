@@ -1,9 +1,14 @@
 ---
-title: "small mams data wrangling"
+title: "ticks data wrangling"
 output: html_document
 ---
 ```{r}
-path <- "./mammals_raw/"
+library(tidyverse)
+```
+
+
+```{r}
+path <- "./ticks_raw/"
 
 files <- list.files(path=path, pattern="*.csv")
 ```
@@ -16,42 +21,23 @@ for(file in files){
 }
 ```
 ```{r}
-smamdata <- mam_pertrapnight
-View(smamdata)
+ticks_raw <- tck_fielddata
+View(ticks_raw)
 ```
 ```{r}
-names(smamdata)
+names(ticks_raw)
 ```
 ```{r}
-captures <- smamdata %>% 
+ticks <- ticks_raw %>% 
   mutate(collectDate = as.Date(collectDate)) %>% 
-  select(siteID, plotID, collectDate, taxonID, tagID, sex, lifeStage) # Select certain columns
+  select(siteID, plotID, collectDate, adultCount, nymphCount, larvaCount) # Select certain columns
 
-glimpse(captures)
-```
-```{r}
-captures <- captures %>% 
-  filter(!is.na(tagID)) # Only keep rows where "tagID" has data
-
-View(captures)
-```
-```{r}
-captures <- smamdata %>% 
-  mutate(collectDate = as.Date(collectDate)) %>% 
-  select(siteID, plotID, collectDate, taxonID, tagID, sex, lifeStage, larvalTicksAttached, adultTicksAttached) # Select certain columns
-
-glimpse(captures)
-```
-```{r}
-captures <- captures %>% 
-  filter(!is.na(tagID)) # Only keep rows where "tagID" has data
-
-View(captures)
+glimpse(ticks)
 ```
 
 Save cleaned data to csv
 ```{r}
-captures %>% 
-  write_csv('./clean_data/mammals_clean.csv')
+ticks %>% 
+  write_csv('./clean_data/ticks_clean.csv')
 ```
 
