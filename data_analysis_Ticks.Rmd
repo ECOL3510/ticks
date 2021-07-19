@@ -27,7 +27,8 @@ mammals_monthly <- mammals %>%
   summarize(mammal_count = n()) %>% 
   mutate(date = make_date(year, month)) %>%
   select(siteID, year, month, date, taxonID, mammal_count) %>% 
-  drop_na()
+  drop_na()%>%
+  filter(taxonID=="PELE")
 ```
 
 
@@ -101,8 +102,8 @@ summary <- monthly %>%
   mutate(year = year(date)) %>% 
   group_by(siteID, year) %>% 
   summarize(n = n(),  # Sample size
-            mean_var1 = mean(Var1), sd_var1 = sd(Var1), se_var1 = sd_var1/sqrt(n), # Mean, sd, se for var1
-            mean_var2 = mean(Var2), sd_var2 = sd(Var2), se_var2 = sd_var2/sqrt(n)) # Mean, sd, se for var1
+            mean_var1 = mean(monthlyTemp), sd_var1 = sd(Var1), se_var1 = sd_var1/sqrt(n), # Mean, sd, se for var1
+            mean_var2 = mean(all_mammals), sd_var2 = sd(Var2), se_var2 = sd_var2/sqrt(n)) # Mean, sd, se for var1
 
 glimpse(summary)
 ```
@@ -120,16 +121,16 @@ Write a brief statement about what you're comparing, ecologically, with each pla
 
 First, let's make a quick plot of our site-level response variable; after we run our ANOVA we can visually compare this graph our statistical test results:
 ```{r}
-ggplot(data = data_object_name, aes(x = independent_variable_name, # name the variable that goes on the x-axis
-                                    y = dependent_variable_name,  # name the variable that goes on the y-axis
-                                    fill = independent_variable_name)) + # name the variable to differentiate colors
+ggplot(data = monthly, aes(x = siteID, # name the variable that goes on the x-axis
+                                    y = sum_adult,  # name the variable that goes on the y-axis
+                                    fill = siteID)) + # name the variable to differentiate colors
   geom_boxplot() +  # Graph these variables using boxplots
   theme_minimal()
 ```
 
 Now, we're ready to define our ANOVA model:
 ```{r}
-model_name <- aov(dependent_variable_name ~ independent_variable_name, data = data_object_name)
+adults_per_site <- aov(sum_adult ~ siteID,  data= monthly )
 ```
 
 Next, we can use this quick command to check the ANOVA model assumptions:
@@ -187,11 +188,11 @@ print(sig)
 
 ## Correlation &Linear regression
 Write a brief statement about what you're comparing, ecologically, with each planned analysis.
-
+We are comparing our monthly temperature data to tick populations across different sites. We are also comparing the small mammal populations with tick populations at the sites. 
 First, let's make a quick plot to see what the data look like
 ```{r}
-ggplot(data = data_object_name, aes(x = independent_variable_name, # name the variable that goes on the x-axis
-                                    y = dependent_variable_name,  # name the variable that goes on the y-axis
+ggplot(data = monthly, aes(x = monthlyTemp, # name the variable that goes on the x-axis
+                                    y = sum_adult,  # name the variable that goes on the y-axis
                                     col = siteID)) + # name the variable to differentiate colors
   geom_point(pch = 16) +  # Graph these variables as a scatterplot
   theme_minimal()
@@ -206,8 +207,8 @@ The types of correlation you can use are:
 * Spearman: Non-parametric (e.g., if your data are not normally distributed) correlation can also take ordinal data
 
 ```{r}
-cor_alpha <- cor.test(data_object_name$independent_variable_name, 
-                      data_object_name$dependent_variable_name, 
+cor_alpha <- cor.test(monthly$sum_adult, 
+                      monthly$monthlyTemp, 
                       method = "pearson") # can also use method = "spearman"
 
 tidy(cor_alpha)
@@ -215,27 +216,27 @@ tidy(cor_alpha)
 
 Now, let's set up and run a linear model to conduct a linear regression.
 ```{r}
-model_name2 <- lm(dependent_variable_name ~ independent_variable_name, data = data_object_name)
+tempVticks <- lm(monthlyTemp ~ sum_adult, data = monthly)
 ```
 
 Next, we can use a few quick commands to check the linear regression model assumptions:
 ```{r, warning=F}
-check_model(model_name2)
-gvlma(model_name2)
+#check_model(model_name2)
+gvlma(tempVticks)
 ```
 
 If our model assumptions seem to be satisfied, we can look at the ANOVA output! 
 ```{r}
-summary(model_name2)
+summary(tempVticks)
 ```
 
 And make a quick plot with the calculated best fit lines for each site. Remember that ecological data reporting convention is to **omit** the trend line for non-significant relationships.
 ```{r, message=F}
-ggplot(data = data_object_name, aes(x = dependent_variable_name, # name the variable that goes on the x-axis
-                                    y = independent_variable_name,  # name the variable that goes on the y-axis
+ggplot(data = monthly, aes(x = monthlyTemp, # name the variable that goes on the x-axis
+                                    y = sum_adult,  # name the variable that goes on the y-axis
                                     col = siteID)) + # name the variable to differentiate colors
   geom_point(pch = 16) +  # Graph these variables as a scatterplot
-  geom_smooth(method = 'lm', aes(group=1), col = 'black', lty = 2) +  # lty=1 for solid line
+  #geom_smooth(method = 'lm', aes(group=1), col = 'black', lty = 2) +  # lty=1 for solid line
   #geom_abline(intercept = 6.81098, slope = -0.08871) +  # Alternate method than geom_smooth to specify line slope & intercept
   theme_minimal()
 ```
