@@ -128,6 +128,7 @@ ggplot(data = monthly, aes(x = siteID, # name the variable that goes on the x-ax
   theme_minimal()
 ```
 
+
 Now, we're ready to define our ANOVA model:
 ```{r}
 adults_per_site <- aov(sum_adult ~ siteID,  data= monthly )
@@ -216,7 +217,7 @@ tidy(cor_alpha)
 
 Now, let's set up and run a linear model to conduct a linear regression.
 ```{r}
-tempVticks <- lm(monthlyTemp ~ sum_adult, data = monthly)
+tempVticks <- lm(sum_adult ~ monthlyTemp, data = monthly)
 ```
 
 Next, we can use a few quick commands to check the linear regression model assumptions:
@@ -240,3 +241,63 @@ ggplot(data = monthly, aes(x = monthlyTemp, # name the variable that goes on the
   #geom_abline(intercept = 6.81098, slope = -0.08871) +  # Alternate method than geom_smooth to specify line slope & intercept
   theme_minimal()
 ```
+##1st Graph (tempVticks)
+```{r}
+ggplot(data = monthly,aes(x = monthlyTemp,
+                           y = sum_adult)) +
+  geom_point(aes(color = siteID), # Add data points
+             size = 1) +
+  theme_minimal() +
+  scale_x_continuous(limits = c(0, 30)) + # Set min/max x-axis values
+  scale_y_continuous(limits = c(0, 60), # Set min/max y-axis values
+                     breaks = seq(2500, 6500, 1000)) + # Specify axis break values
+  scale_color_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1")) + # Specify custom colors
+  labs(x = "Monthly Average Temperature (°C)", # Specify axis labels
+       y = "Number of Adult Ticks", 
+       color = "NEON site")
+```
+
+
+## 2nd Graph (ticks vs. mammals)
+```{r}
+ggplot(data = monthly, aes(x = all_mammals, # name the variable that goes on the x-axis
+                                    y = sum_adult,  # name the variable that goes on the y-axis
+                                    col = siteID)) + # name the variable to differentiate colors
+  geom_point(pch = 16, size = 3) +  # Graph these variables as a scatterplot
+  theme_minimal() +
+   scale_x_continuous(limits = c(0, 1500)) + # Set min/max x-axis values
+  scale_y_continuous(limits = c(0, 30), # Set min/max y-axis values
+                     breaks = seq(2500, 6500, 1000)) + # Specify axis break values
+  scale_color_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1")) + # Specify custom colors
+  labs(x = "Number of White Mice", # Specify axis labels
+       y = "Number of Adult Ticks", 
+       color = "NEON Site")
+```
+
+## Linear regression (Mammals vs Ticks)
+```{r}
+mammVticks <- lm(sum_adult ~ all_mammals, data = monthly)
+```
+
+```{r, warning=F}
+#check_model(model_name2)
+gvlma(mammVticks)
+```
+
+```{r}
+summary(mammVticks)
+```
+
+## Box plot ticks vs. Site (#3)
+```{r}
+ggplot(data = monthly,aes(x = siteID,
+                           y = sum_adult)) +
+  geom_jitter(width = 0.05, alpha = 0.2) + # Add partially-transparent data points 
+  geom_boxplot(aes(fill = siteID), outlier.color = NA, 
+               alpha = 0.5) + # Plot boxplots
+  theme_minimal() +
+  scale_fill_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1"), # Set colors for groups
+                    guide = 'none') + # Turn off legend for this layer
+  labs(x = "NEON Site", # Specify x-axis label
+       y = "Number of Adult Ticks") # Specify y-axis label
+``` 
