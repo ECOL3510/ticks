@@ -148,7 +148,7 @@ aov_residuals <- residuals(object = model_name)
 shapiro.test(x = aov_residuals )
 
 # Visualize model checks as graphs
-check_model(model_name)
+#check_model(model_name)
 ```
 
 *(If our data violate the homogeneity of variance assumption, we can instead do a Welch one-way test using the `oneway.test()` function below)*
@@ -246,7 +246,7 @@ ggplot(data = monthly, aes(x = monthlyTemp, # name the variable that goes on the
 ggplot(data = monthly,aes(x = monthlyTemp,
                            y = sum_adult)) +
   geom_point(aes(color = siteID), # Add data points
-             size = 1) +
+             size = 2) +
   theme_minimal() +
   scale_x_continuous(limits = c(0, 30)) + # Set min/max x-axis values
   scale_y_continuous(limits = c(0, 60), # Set min/max y-axis values
@@ -255,6 +255,19 @@ ggplot(data = monthly,aes(x = monthlyTemp,
   labs(x = "Monthly Average Temperature (°C)", # Specify axis labels
        y = "Number of Adult Ticks", 
        color = "NEON site")
+```
+
+```{r}
+tempVticks <- lm(sum_adult ~ monthlyTemp, data = monthly)
+```
+
+```{r, warning=F}
+#check_model(model_name2)
+gvlma(tempVticks)
+```
+
+```{r}
+summary(tempVticks)
 ```
 
 
@@ -301,3 +314,23 @@ ggplot(data = monthly,aes(x = siteID,
   labs(x = "NEON Site", # Specify x-axis label
        y = "Number of Adult Ticks") # Specify y-axis label
 ``` 
+
+```{r}
+ticksVsite <- aov(sum_adult ~ siteID, data = monthly)
+```
+
+```{r}
+summary(ticksVsite)
+```
+
+```{r}
+tukey <- tidy(TukeyHSD(ticksVsite))
+print(tukey)
+```
+
+```{r}
+sig <- tukey %>% 
+  filter(adj.p.value < 0.05)
+
+print(sig)
+```
