@@ -1,135 +1,108 @@
 ---
 title: "Data analysis skeleton: Update to reflect your team's analyses!"
-output: html_document
+output: 
+  html_document:
+    keep_md: true
 ---
 
 # Load necessary packages
 ```{r}
 #install.packages('pacman', repos = "http://cran.us.r-project.org")
-pacman::p_load(tidyverse, broom, lubridate, performance, see, qqplotr, gvlma)
+pacman::p_load(tidyverse, broom, lubridate, gvlma, car, ggpubr, MASS)
 ```
 
 # Load cleaned data files
-## Data type 1: 
-```{r, eval = FALSE}
+## Data type 1: Small mammals
+```{r}
 mammals <- read_csv('./clean_data/mammals_clean.csv') %>% 
   mutate(year = year(collectDate),
          month = month(collectDate),
          date = make_date(year, month),
-         tagID = factor(tagID),
-         taxonID = factor(taxonID)) %>%
-  select(siteID, year, month, date, plotID, taxonID, tagID)
+         tagID = factor(tagID)) %>%
+  dplyr::select(siteID, year, month, date, plotID, taxonID, tagID, adultTicksAttached)
 ```
-## Summarize mammals to monthly counts
+
+### Summarize mammals to monthly counts by focal taxa and overall total
 ```{r}
 mammals_monthly <- mammals %>%
   group_by(siteID, year, month, taxonID) %>%
   summarize(mammal_count = n()) %>% 
   mutate(date = make_date(year, month)) %>%
-  select(siteID, year, month, date, taxonID, mammal_count) %>% 
-  drop_na()%>%
-  filter(taxonID=="PELE")
+  dplyr::select(siteID, year, month, date, taxonID, mammal_count) %>% 
+  pivot_wider(names_from = taxonID, values_from = mammal_count) %>%
+  ungroup() %>% 
+  mutate(total_mammals = rowSums(across(PEGO:RARA), na.rm=T)) %>%
+  dplyr::select(siteID:date, total_mammals, PEGO:RARA)
+  #filter(taxonID=="PELE")
 ```
 
-
-## Data type 2:
-```{r, eval = FALSE}
+## Data type 2: Air temp
+```{r}
 temp <- read_csv('./clean_data/temp_clean.csv')
-
-glimpse(temp)
 ```
 
-## Summarize temp to monthly mean
+### Summarize temp to monthly mean
 ```{r}
 temp_monthly <- temp %>%
   group_by(siteID, year, month) %>%
-  summarize(monthlyTemp = mean(tempSingleMean)) %>%
+  summarize(monthlyTemp = round(mean(tempSingleMean),2)) %>%
   mutate(date = make_date(year, month)) %>%
-  select(siteID, year, month, date, monthlyTemp)
+  dplyr::select(siteID, year, month, date, monthlyTemp)
 ```
 
-##Data type 3
-```{r, eval = FALSE}
+## Data type 3 Ticks
+```{r}
 ticks <- read_csv('./clean_data/ticks_clean.csv') %>% 
   mutate(year = year(collectDate),
          month = month(collectDate),
          date = make_date(year, month)) %>%
-  select(siteID, year, month, date, plotID, adultCount:larvaCount)
+  dplyr::select(siteID, year, month, date, adultCount:larvaCount)
 ```
 
-## Combine data files based on shared criteria
-Type out some details of what the column names are that your data objects have in common. Note that for R to combine them, the column names must be **exactly** the same (e.g., spelling, capitalization, etc.)
-```{r, eval = FALSE}
-data <- full_join(mammals_monthly, ticks) %>%
-  full_join(., temp_monthly)
-
-print(data)
-```
-
+### Summarize ticks to monthly total
 ```{r}
-monthly <- data %>%
-  group_by(siteID,date) %>%
-  summarize(monthlyTemp = mean(monthlyTemp),
-            all_mammals = sum(mammal_count),
-            sum_adult=sum(adultCount),
+ticks_monthly <- ticks %>% 
+  group_by(siteID, date) %>% 
+  summarize(sum_adult=sum(adultCount),
             sum_nymph= sum(nymphCount),
             sum_larva=sum(larvaCount))
 ```
 
 
+## Combine data files based on shared criteria
+Type out some details of what the column names are that your data objects have in common. Note that for R to combine them, the column names must be **exactly** the same (e.g., spelling, capitalization, etc.)
+```{r}
+monthly <- full_join(temp_monthly, ticks_monthly) %>%
+  full_join(., mammals_monthly)
+
+print(monthly)
+```
+
 # Statistical analysis:
-* If your independent variable is categorical (e.g., siteID) and your dependent variable is continuous (numeric values), you should perform an ANOVA.  
-For ANOVA, the R syntax is: **aov(dependent_variable_name ~ independent_variable_name, data = data_object_name)**
-```{r}
-adults_per_site <- aov(sum_adult ~ siteID,  data= monthly )
-```
-
-* If your independent variable and your dependent variable are both continuous (numeric values), you should perform a linear regression.  
-For linear regression, the R syntax is: **lm(dependent_variable_name ~ independent_variable_name, data = data_object_name)**
-```{r}
-
-```
-
-
-Note that you should use a different "model_name" for each statistical test you are conducting.
-
 ## Summary/descriptive statistics
 Often, we report summary statistics like the mean, a measure of variance (standard deviation, standard error, 95% confidence intervals) and the sample size. 
 
 We can do this easily through the use of `dplyr()` commands. In this example, we can calculate average annual values per site using:
 ```{r}
-summary <- monthly %>% 
-  mutate(year = year(date)) %>% 
-  group_by(siteID, year) %>% 
+temp_summary_by_site <- monthly %>% 
+  group_by(siteID) %>% 
   summarize(n = n(),  # Sample size
-            mean_var1 = mean(monthlyTemp), sd_var1 = sd(Var1), se_var1 = sd_var1/sqrt(n), # Mean, sd, se for var1
-            mean_var2 = mean(all_mammals), sd_var2 = sd(Var2), se_var2 = sd_var2/sqrt(n)) # Mean, sd, se for var1
+            mean_Temp = mean(monthlyTemp, na.rm=T), sd_Temp = sd(monthlyTemp, na.rm=T), se_Temp = sd_Temp/sqrt(n)) # Mean, sd, se for temperature
 
-glimpse(summary)
+glimpse(temp_summary_by_site)
 ```
 
 To simplify reporting, we can also ask R to round all of these calculated values to a specific number of decimal places:
 ```{r}
-summary <- as_tibble(summary) %>% 
-  mutate_at(vars(mean_var1:se_var2), funs(round(.,2))) # Round each of our calculated columns to 2 decimals
+temp_summary_by_site <- as_tibble(temp_summary_by_site) %>% 
+  mutate_at(vars(mean_Temp:se_Temp), funs(round(.,2))) %>% # Round each of our calculated columns to 2 decimals
+  arrange(mean_Temp) 
 
-print(summary)
+print(temp_summary_by_site)
 ```
 
-## ANOVA
-Write a brief statement about what you're comparing, ecologically, with each planned analysis.
-
-First, let's make a quick plot of our site-level response variable; after we run our ANOVA we can visually compare this graph our statistical test results:
-```{r}
-ggplot(data = monthly, aes(x = siteID, # name the variable that goes on the x-axis
-                                    y = sum_adult,  # name the variable that goes on the y-axis
-                                    fill = siteID)) + # name the variable to differentiate colors
-  geom_boxplot() +  # Graph these variables using boxplots
-  theme_minimal()
-```
-
-
-Now, we're ready to define our ANOVA model:
+# ANOVA: Do monthly adult tick counts vary among sites?
+First, we'll define our ANOVA model:
 ```{r}
 adults_per_site <- aov(sum_adult ~ siteID,  data= monthly )
 ```
@@ -137,67 +110,47 @@ adults_per_site <- aov(sum_adult ~ siteID,  data= monthly )
 Next, we can use this quick command to check the ANOVA model assumptions:
 ```{r, warning=F}
 # Check for homogeneity of variance: 
-leveneTest(dependent_variable_name ~ independent_variable_name, data = data_object_name)
+leveneTest(sum_adult ~ siteID,  data= monthly)
 # If the p-value of Levene's test is greater than 0.05, we have not violated the assumption of homogeneity of variance
 
 # Check for normality of residuals:
 ## 1) Extract the model residuals
-aov_residuals <- residuals(object = model_name)
+aov_residuals <- residuals(object = adults_per_site)
 
 ## 2) Run Shapiro-Wilk test
 shapiro.test(x = aov_residuals )
 
-# Visualize model checks as graphs
-#check_model(model_name)
 ```
 
-*(If our data violate the homogeneity of variance assumption, we can instead do a Welch one-way test using the `oneway.test()` function below)*
+*Since our data violate the homogeneity of variance assumption, we instead do a Welch one-way test using the `oneway.test()` function*
 ```{r}
-oneway.test(dependent_variable_name ~ independent_variable_name, data = data_object_name)
+oneway.test(sum_adult ~ siteID,  data= monthly)
 
-pairwise.t.test(data_object_name$dependent_variable_name,
-                data_object_name$independent_variable_name,
+pairwise.t.test(monthly$sum_adult,
+                monthly$siteID,
                  p.adjust.method = "BH", pool.sd = FALSE)
 ```
+If the model p-value is smaller than 0.05 (our standard alpha), we reject the null hypothesis and conclude that there is a significant difference in our dependent variable between *at least two* sites. 
 
-If our model assumptions seem to be satisfied, we can look at the ANOVA output! 
-```{r}
-summary(adults_per_site)
-```
-If the model p-value is smaller than 0.05 (our standard alpha), we reject the null hypothesis and conclude that there is a significant difference in our dependent variable between *at least two* sites.
+We can then look at the pairwise comparison table to see which sites differed from one another and update our figure to reflect what we found
 
-But which site(s) are different? We'll use a post-hoc Tukey test to find out!
-```{r}
-tukey <- tidy(TukeyHSD(adults_per_site))
-print(tukey)
-```
-Note that the "estimate" column tells you how different the mean values of each pair of sites is.
+# Box plot: Tick counts among Sites
+```{r ticks_per_site}
+ggplot(data = monthly,aes(x = siteID,
+                           y = sum_adult)) +
+  geom_jitter(width = 0.05, alpha = 0.5) + # Add partially-transparent data points 
+  geom_boxplot(aes(fill = siteID), outlier.color = NA, 
+               alpha = 0.5) + # Plot boxplots
+  theme_minimal() +
+  scale_fill_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1"), # Set colors for groups
+                    guide = 'none') + # Turn off legend for this layer
+  labs(x = "NEON site", # Specify x-axis label
+       y = "Adult ticks per month") + # Specify y-axis label
+  annotate("text", x = 1:5, y = c(6, 32,6,62,32), label = c("A","B", "A","C","B")) # Add a text label to differentiate the statistically-different groups
+``` 
 
-If you have a *lot* of contrasts, you can run the command below to only show the statistically significant (p <0.05) contrasts:
-```{r}
-tukey %>% 
-  filter(adj.p.value < 0.05)
-```
-
-If you have a *lot* of contrasts, you can run the command below to only show the statistically significant (p <0.05) contrasts:
-```{r}
-sig <- tukey %>% 
-  filter(adj.p.value < 0.05)
-
-print(sig)
-```
-
-## Correlation &Linear regression
-Write a brief statement about what you're comparing, ecologically, with each planned analysis.
-We are comparing our monthly temperature data to tick populations across different sites. We are also comparing the small mammal populations with tick populations at the sites. 
-First, let's make a quick plot to see what the data look like
-```{r}
-ggplot(data = monthly, aes(x = monthlyTemp, # name the variable that goes on the x-axis
-                                    y = sum_adult,  # name the variable that goes on the y-axis
-                                    col = siteID)) + # name the variable to differentiate colors
-  geom_point(pch = 16) +  # Graph these variables as a scatterplot
-  theme_minimal()
-```
+# Correlation & Linear regression: Monthly tick counts as a function of mean temperature
+**We are comparing our monthly temperature data to tick populations across different sites.**
 
 We can calculate a correlation coefficient to quantify the strength and direction of association between the two variables.
 
@@ -208,41 +161,44 @@ The types of correlation you can use are:
 * Spearman: Non-parametric (e.g., if your data are not normally distributed) correlation can also take ordinal data
 
 ```{r}
+# Check whether tick data normally distributed
+shapiro.test(monthly$sum_adult)
+
+# Check whether monthly temperature data normally distributed
+shapiro.test(monthly$monthlyTemp)
+
+```
+
+We will use Spearman correlation because the data are not normally distributed
+```{r}
 cor_alpha <- cor.test(monthly$sum_adult, 
                       monthly$monthlyTemp, 
-                      method = "pearson") # can also use method = "spearman"
+                      method = "spearman")
 
 tidy(cor_alpha)
 ```
 
-Now, let's set up and run a linear model to conduct a linear regression.
-```{r}
-tempVticks <- lm(sum_adult ~ monthlyTemp, data = monthly)
-```
-
-Next, we can use a few quick commands to check the linear regression model assumptions:
+Now, let's set up and run a model to conduct a regression.
+First, we can run a linear regression model and check its assumptions:
 ```{r, warning=F}
-#check_model(model_name2)
+tempVticks <- lm(sum_adult ~ monthlyTemp, data = monthly)
 gvlma(tempVticks)
 ```
+Our linear model **failed** the overall model assumptions, so we should not go forward interpreting it.
 
-If our model assumptions seem to be satisfied, we can look at the ANOVA output! 
+We will instead use a **negative binomial regression** because our response variable includes count data, and is overdispersed (the variances is much larger than the mean) 
 ```{r}
+tempVticks <- glm.nb(sum_adult ~ monthlyTemp, data = monthly)
 summary(tempVticks)
+car::Anova(tempVticks)
+
+# Report the chi-square as X2 (degress of freedom, N = sample size) = chi-square statistic value, p = p value.
 ```
 
-And make a quick plot with the calculated best fit lines for each site. Remember that ecological data reporting convention is to **omit** the trend line for non-significant relationships.
-```{r, message=F}
-ggplot(data = monthly, aes(x = monthlyTemp, # name the variable that goes on the x-axis
-                                    y = sum_adult,  # name the variable that goes on the y-axis
-                                    col = siteID)) + # name the variable to differentiate colors
-  geom_point(pch = 16) +  # Graph these variables as a scatterplot
-  #geom_smooth(method = 'lm', aes(group=1), col = 'black', lty = 2) +  # lty=1 for solid line
-  #geom_abline(intercept = 6.81098, slope = -0.08871) +  # Alternate method than geom_smooth to specify line slope & intercept
-  theme_minimal()
-```
-##1st Graph (tempVticks)
-```{r}
+# Scatterplot: Monthly adult ticks as a function of monthly mean temperature
+Remember that ecological data reporting convention is to **omit** the trend line for non-significant relationships.
+
+```{r ticks_vs_temp_scatterplot}
 ggplot(data = monthly,aes(x = monthlyTemp,
                            y = sum_adult)) +
   geom_point(aes(color = siteID), # Add data points
@@ -250,87 +206,62 @@ ggplot(data = monthly,aes(x = monthlyTemp,
   theme_minimal() +
   scale_x_continuous(limits = c(0, 30)) + # Set min/max x-axis values
   scale_y_continuous(limits = c(0, 60), # Set min/max y-axis values
-                     breaks = seq(2500, 6500, 1000)) + # Specify axis break values
+                     breaks = seq(0, 60, 10)) + # Specify axis break values
   scale_color_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1")) + # Specify custom colors
   labs(x = "Monthly Average Temperature (°C)", # Specify axis labels
        y = "Number of Adult Ticks", 
        color = "NEON site")
 ```
 
+# Linear regression (Mammals vs Ticks)
+**We are comparing the small mammal populations with tick populations at the sites.**
 ```{r}
-tempVticks <- lm(sum_adult ~ monthlyTemp, data = monthly)
+# Check whether tick data normally distributed
+shapiro.test(monthly$sum_adult)
+
+# Check whether monthly temperature data normally distributed
+shapiro.test(monthly$total_mammals)
+
 ```
 
+We will use Spearman correlation because the data are not normally distributed
+```{r}
+cor_alpha <- cor.test(monthly$sum_adult, 
+                      monthly$total_mammals, 
+                      method = "spearman")
+
+tidy(cor_alpha)
+```
+
+Now, let's set up and run a model to conduct a regression.
+
+First, we can run a linear regression model and check its assumptions:
 ```{r, warning=F}
-#check_model(model_name2)
-gvlma(tempVticks)
-```
-
-```{r}
-summary(tempVticks)
-```
-
-
-## 2nd Graph (ticks vs. mammals)
-```{r}
-ggplot(data = monthly, aes(x = all_mammals, # name the variable that goes on the x-axis
-                                    y = sum_adult,  # name the variable that goes on the y-axis
-                                    col = siteID)) + # name the variable to differentiate colors
-  geom_point(pch = 16, size = 3) +  # Graph these variables as a scatterplot
-  theme_minimal() +
-   scale_x_continuous(limits = c(0, 1500)) + # Set min/max x-axis values
-  scale_y_continuous(limits = c(0, 30), # Set min/max y-axis values
-                     breaks = seq(2500, 6500, 1000)) + # Specify axis break values
-  scale_color_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1")) + # Specify custom colors
-  labs(x = "Number of White Mice", # Specify axis labels
-       y = "Number of Adult Ticks", 
-       color = "NEON Site")
-```
-
-## Linear regression (Mammals vs Ticks)
-```{r}
-mammVticks <- lm(sum_adult ~ all_mammals, data = monthly)
-```
-
-```{r, warning=F}
-#check_model(model_name2)
+mammVticks <- lm(sum_adult ~ total_mammals, data = monthly)
 gvlma(mammVticks)
 ```
+Our linear model **failed** the overall model assumptions, so we should not go forward interpreting it.
 
+We will instead use a **negative binomial regression** because our response variable includes count data, and is overdispersed (the variances is much larger than the mean) 
 ```{r}
+mammVticks <- glm.nb(sum_adult ~ total_mammals, data = monthly)
 summary(mammVticks)
+car::Anova(mammVticks)
 ```
 
-## Box plot ticks vs. Site (#3)
-```{r}
-ggplot(data = monthly,aes(x = siteID,
-                           y = sum_adult)) +
-  geom_jitter(width = 0.05, alpha = 0.2) + # Add partially-transparent data points 
-  geom_boxplot(aes(fill = siteID), outlier.color = NA, 
-               alpha = 0.5) + # Plot boxplots
+# Scatterplot: Monthly adult ticks as a function of monthly mammals
+```{r ticks_vs_mammals_scatterplot}
+ggplot(data = monthly, aes(x = total_mammals, # name the variable that goes on the x-axis
+                           y = sum_adult,  # name the variable that goes on the y-axis
+                           col = siteID)) + # name the variable to differentiate colors
+  geom_point(pch = 16, size = 3) +  # Graph these variables as a scatterplot
   theme_minimal() +
-  scale_fill_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1"), # Set colors for groups
-                    guide = 'none') + # Turn off legend for this layer
-  labs(x = "NEON Site", # Specify x-axis label
-       y = "Number of Adult Ticks") # Specify y-axis label
-``` 
-
-```{r}
-ticksVsite <- aov(sum_adult ~ siteID, data = monthly)
-```
-
-```{r}
-summary(ticksVsite)
-```
-
-```{r}
-tukey <- tidy(TukeyHSD(ticksVsite))
-print(tukey)
-```
-
-```{r}
-sig <- tukey %>% 
-  filter(adj.p.value < 0.05)
-
-print(sig)
+  scale_x_continuous(limits = c(0, 350)) + # Set min/max x-axis values
+  scale_y_continuous(limits = c(0, 60), # Set min/max y-axis values
+                     breaks = seq(0, 60, 10)) + # Specify axis break values
+  scale_color_manual(values = c("darkorange","purple","cyan4", "firebrick2", "springgreen1")) + # Specify custom colors
+  labs(x = "Small mammals captured", # Specify axis labels
+       y = "Adult Ticks", 
+       color = "NEON Site")+
+  geom_smooth(aes(group=1), method = "glm.nb", col='black')
 ```
