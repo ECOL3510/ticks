@@ -47,7 +47,8 @@ If all your sites are in the contiguous US ("lower 48"), you can use the script 
 par(oma=c(2,2,1,1), mar = c(0,0,0,0),mgp=c(0,0,0))
 
 maps::map('state', col='black', lwd=2) 
-maps::map('state', region = myStates, add = T, fill=T, col='chocolate1')  # Customize the fill color if you want!
+maps::map('state', region = myStates, add = T, fill=T, 
+          col= c('darkorange', 'firebrick2', 'cyan4','springgreen1', 'purple'))  # Customize the fill color if you want!
 
 points(sites$longitude, sites$latitude, 
        col='black', pch=16, cex=1.5,lwd=1)
